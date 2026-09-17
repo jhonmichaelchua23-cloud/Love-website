@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Little Surprise For You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* =========================================================================
+   ✏️  EDIT ME FIRST — everything you'll want to change lives right here.
+   Scroll to the "CONFIG" section further down in the <script> at the
+   bottom of this file for the TEXT content (names, letter, buttons).
+   This block up top is for the LOOK of the site (colors, fonts, sizes).
+   ========================================================================= */
+:root{
+  --cream:        #FFF8F1;
+  --cream-deep:   #FBEEE2;
+  --pink-soft:    #FCE0EC;
+  --pink-mid:     #F3A9C4;
+  --rose:         #E8829F;
+  --rose-deep:    #C94F63;
+  --ink:          #4A2A35;
+  --ink-soft:     #7A5561;
+  --gold:         #D9A857;
+  --white:        #FFFFFF;
+
+  --font-display: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body:    'Quicksand', 'Trebuchet MS', sans-serif;
+
+  --heading-size: clamp(1.8rem, 5vw, 2.8rem);
+  --letter-size:  clamp(1.05rem, 2.4vw, 1.25rem);
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --page-bg: #241a1e; }
+}
+:root{ --page-bg: var(--cream); }
+:root[data-theme="dark"]{ --page-bg: #241a1e; }
+
+*{ box-sizing: border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  min-height:100vh;
+  background: var(--page-bg);
+  font-family: var(--font-body);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.stage{
+  position:relative;
+  min-height:100vh;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 6vh 1.25rem;
+}
+
+.screen{
+  width:100%;
+  max-width: 560px;
+  display:none;
+  animation: riseIn .7s ease both;
+}
+.screen.active{ display:block; }
+
+@keyframes riseIn{
+  from{ opacity:0; transform: translateY(18px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+@keyframes fadeOut{
+  to{ opacity:0; transform: translateY(-12px); }
+}
+.screen.leaving{ animation: fadeOut .45s ease forwards; }
+
+.card{
+  position:relative;
+  background: var(--cream-deep);
+  border-radius: 28px;
+  padding: clamp(2rem, 6vw, 3.2rem) clamp(1.5rem, 6vw, 3rem);
+  text-align:center;
+  box-shadow: 0 18px 45px -18px rgba(74,42,53,0.35);
+  border: 1px solid rgba(232,130,159,0.25);
+}
+
+.eyebrow-hearts{
+  display:flex;
+  justify-content:center;
+  gap: .4rem;
+  margin-bottom: 1.1rem;
+  color: var(--rose);
+  font-size: 1.1rem;
+}
+
+h1.heading{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--heading-size);
+  line-height: 1.2;
+  margin: 0 0 .6rem;
+  color: var(--rose-deep);
+}
+
+p.subtext{
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0 0 2rem;
+}
+
+.btn-row{
+  display:flex;
+  gap: 1rem;
+  justify-content:center;
+  flex-wrap: wrap;
+  position: relative;
+  min-height: 60px;
+}
+
+button{
+  font-family: var(--font-body);
+  font-weight:600;
+  font-size: 1rem;
+  border-radius: 999px;
+  padding: .85rem 1.7rem;
+  border: none;
+  cursor:pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+button:focus-visible{
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.btn-yes{
+  background: var(--rose-deep);
+  color: var(--white);
+  box-shadow: 0 10px 22px -8px rgba(201,79,99,0.55);
+}
+.btn-yes:hover{ transform: translateY(-2px) scale(1.03); }
+.btn-yes:active{ transform: scale(0.97); }
+
+.btn-no{
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1.5px solid rgba(122,85,97,0.35);
+  position: relative;
+  transition: transform .12s ease, left .12s ease, top .12s ease;
+}
+
+.btn-proceed{
+  background: var(--rose-deep);
+  color: var(--white);
+  box-shadow: 0 10px 22px -8px rgba(201,79,99,0.55);
+  font-size: 1.05rem;
+  padding: .95rem 2.1rem;
+}
+.btn-proceed:hover{ transform: translateY(-2px) scale(1.03); }
+
+.btn-ghost{
+  background: var(--pink-soft);
+  color: var(--rose-deep);
+}
+.btn-ghost:hover{ transform: translateY(-2px); }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+.mark-tulip{ width: 74px; height:auto; margin: 0 auto 1.2rem; display:block; }
+
+.garden-wrap{
+  position: relative;
+  padding-top: 1rem;
+}
+.garden-row{
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+  gap: clamp(4px, 2vw, 14px);
+  margin: 0 auto 1.6rem;
+  max-width: 480px;
+}
+.garden-row svg{
+  width: clamp(38px, 11vw, 62px);
+  height:auto;
+  transform-origin: bottom center;
+  animation: sway 4.5s ease-in-out infinite;
+}
+.garden-row svg:nth-child(2n){ animation-duration: 5.2s; animation-delay: .3s; }
+.garden-row svg:nth-child(3n){ animation-duration: 3.8s; animation-delay: .6s; }
+.garden-row svg:nth-child(4n){ animation-duration: 5.6s; animation-delay: .15s; }
+
+@keyframes sway{
+  0%,100%{ transform: rotate(-2.5deg); }
+  50%{ transform: rotate(2.5deg); }
+}
+
+.petals{
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: 28px;
+}
+.petal{
+  position:absolute;
+  top:-5%;
+  font-size: 14px;
+  opacity: .85;
+  animation: fall linear infinite;
+  color: var(--pink-mid);
+}
+@keyframes fall{
+  from{ transform: translateY(-10%) translateX(0) rotate(0deg); }
+  to{ transform: translateY(115%) translateX(var(--drift, 20px)) rotate(320deg); }
+}
+
+.envelope-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 1.4rem;
+}
+.envelope{
+  width: min(280px, 70vw);
+  cursor:pointer;
+  transition: transform .25s ease;
+}
+.envelope:hover{ transform: translateY(-3px); }
+.envelope:active{ transform: scale(0.98); }
+
+.letter-paper{
+  display:none;
+  text-align:left;
+  background: var(--white);
+  border-radius: 18px;
+  padding: clamp(1.6rem, 5vw, 2.6rem);
+  box-shadow: 0 14px 34px -16px rgba(74,42,53,0.4);
+  animation: unfold .6s ease both;
+  position: relative;
+}
+.letter-paper.shown{ display:block; }
+@keyframes unfold{
+  from{ opacity:0; transform: scaleY(0.85) translateY(10px); }
+  to{ opacity:1; transform: scaleY(1) translateY(0); }
+}
+
+.letter-head{
+  text-align:center;
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px dashed rgba(201,79,99,0.3);
+}
+.letter-head h2{
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  color: var(--rose-deep);
+  margin: 0 0 .3rem;
+  font-weight: 600;
+}
+.letter-meta{
+  font-size: .85rem;
+  color: var(--ink-soft);
+  letter-spacing: .02em;
+}
+
+.letter-body{
+  font-family: var(--font-display);
+  font-size: var(--letter-size);
+  line-height: 1.85;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+.letter-body.placeholder{
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.photos{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
+  gap: .9rem;
+  margin-top: 1.8rem;
+}
+.photo-slot{
+  aspect-ratio: 4/5;
+  border-radius: 14px;
+  border: 1.5px dashed rgba(201,79,99,0.35);
+  background: var(--pink-soft);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size: .78rem;
+  color: var(--ink-soft);
+  padding: .6rem;
+  overflow:hidden;
+}
+.photo-slot img{ width:100%; height:100%; object-fit:cover; border-radius: 12px; }
+.photo-caption{
+  font-size: .8rem;
+  text-align:center;
+  color: var(--ink-soft);
+  margin-top: .35rem;
+}
+.photo-item{ display:flex; flex-direction:column; }
+
+.sparkle{
+  position:absolute;
+  color: var(--gold);
+  opacity: .7;
+  animation: twinkle 2.4s ease-in-out infinite;
+}
+@keyframes twinkle{
+  0%,100%{ opacity:.25; transform: scale(.8); }
+  50%{ opacity:.85; transform: scale(1.1); }
+}
+
+.footer-note{
+  margin-top: 2.2rem;
+  text-align:center;
+  font-size: .78rem;
+  color: var(--ink-soft);
+  opacity: .7;
+}
+
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- ======================= SCREEN 1 — OPENING CARD ======================= -->
+  <section class="screen active" id="screen-1" aria-label="Opening card">
+    <div class="card" id="card1">
+      <svg class="mark-tulip" viewBox="0 0 60 70" role="img" aria-hidden="true">
+        <path d="M30 68 L30 34" stroke="#8FB88A" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M30 50 Q18 48 16 40" stroke="#8FB88A" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M30 56 Q42 54 44 46" stroke="#8FB88A" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M30 36 C14 36 12 18 20 8 C24 14 28 16 30 20 C32 16 36 14 40 8 C48 18 46 36 30 36 Z" fill="#E8829F"/>
+        <path d="M30 36 C24 30 24 16 30 8 C36 16 36 30 30 36 Z" fill="#F3A9C4"/>
+      </svg>
+      <div class="eyebrow-hearts" aria-hidden="true">♥ ⋆ ♥</div>
+      <h1 class="heading" id="text-opening-heading">A Little Surprise for You 💗</h1>
+      <p class="subtext" id="text-opening-question">Would you like to open your monthsary surprise?</p>
+      <div class="btn-row" id="btnRow1">
+        <button class="btn-yes" id="btnYes">Oo 💗</button>
+        <button class="btn-no" id="btnNo">Hindi</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= SCREEN 2 — TULIP SURPRISE ======================= -->
+  <section class="screen" id="screen-2" aria-label="Tulip surprise">
+    <div class="card garden-wrap">
+      <div class="petals" id="petalField" aria-hidden="true"></div>
+      <div class="garden-row" aria-hidden="true" id="tulipRow"></div>
+      <h1 class="heading" id="text-tulip-heading">For You, My Love 🌷</h1>
+      <p class="subtext" id="text-tulip-subtitle">A little something made with love, just for you.</p>
+      <div class="btn-row">
+        <button class="btn-proceed" id="btnProceed">PROCEED 💌</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= SCREEN 3 — THE LETTER ======================= -->
+  <section class="screen" id="screen-3" aria-label="The letter">
+    <div class="envelope-wrap">
+
+      <div class="envelope" id="envelope" tabindex="0" role="button" aria-label="Open the letter">
+        <svg viewBox="0 0 260 170" width="100%" role="img" aria-hidden="true">
+          <rect x="6" y="14" width="248" height="150" rx="10" fill="#F7C9DA"/>
+          <path d="M6 24 L130 110 L254 24" fill="none" stroke="#C94F63" stroke-width="3" stroke-linejoin="round"/>
+          <path id="flap" d="M6 24 L130 100 L254 24 L254 24 Q254 14 244 14 L16 14 Q6 14 6 24 Z" fill="#F3A9C4" stroke="#C94F63" stroke-width="2.5" stroke-linejoin="round" style="transform-origin: 130px 18px; transition: transform .5s ease;"/>
+          <text x="130" y="72" text-anchor="middle" font-size="22" fill="#C94F63">♥</text>
+        </svg>
+      </div>
+      <p class="subtext" id="envelope-hint" style="margin:0;">Tap the envelope to open it</p>
+
+      <div class="letter-paper" id="letterPaper">
+        <div class="letter-head">
+          <h2 id="text-letter-heading">A Letter for My Love</h2>
+          <div class="letter-meta" id="text-letter-meta"></div>
+        </div>
+        <div class="letter-body" id="text-letter-body"></div>
+
+        <div class="photos" id="photoGrid"></div>
+
+        <p class="footer-note" id="text-footer-note"></p>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* =========================================================================
+   ✏️  EDIT ME — THIS is the part you'll touch most often.
+   ========================================================================= */
+const CONFIG = {
+
+  girlfriendName: "Babi",
+  yourName: "Babi",
+  monthsaryNumber: 8,
+  monthsaryDate: "September 17, 2026",
+
+  openingHeading: "A Little Surprise for You 💗",
+  openingQuestion: "Would you like to open your monthsary surprise?",
+  yesButtonLabel: "Oo 💗",
+  noButtonLabel: "Hindi, blehh",
+
+  tulipHeading: "For You, My Babi 🌷",
+  tulipSubtitle: "A little something made with love, just for you.",
+  proceedButtonLabel: "PROCEED 💌",
+
+  letterHeading: "A Letter for My Babi",
+  letterText: `Happy 8th monthsary, babii! ❤️
+
+I'm so happy na umabot tayo hanggang dito. Ang bilis ng panahon! Sa loob ng 8 months, ang dami na nating memories together, and I hope madagdagan pa 'yon. I'm thankful kasi dumating ka sa buhay ko and minahal mo ako, hindi lang dahil bored ka lang, kundi dahil gusto mong mag-build ng future kasama ako. I'm happy to hear that from you, and gano'n din ako. Ikaw lang ang gusto kong makasama habang-buhay. Wala nang iba. Sa'yo ko lang tutuparin lahat ng pangako ko.
+
+And thank you dahil pinipili mo pa ring mag-stay kahit na dumadating tayo sa pinakaworst na situations. I know we're both not perfect, but still, natututo tayo sa mga pagkakamali natin, and naggo-grow tayo sa relationship natin. Thank you rin dahil lagi mong sinasabi sa akin kung ano ang nararamdaman mo. If may nararamdaman kang kakaiba, tell me lang, partner mo ako, and I'm always here to listen sa mga saloobin mo. Kahit umiyak ka sa akin, okay lang. Nandito ako para damayan at i-comfort ka palagi.
+
+Mahal na mahal kita, higit pa sa alam mo. Hindi ko naman palaging nae-express 'yon sa'yo or nasasabi, but I know na sobrang mahal kita at ayaw na kitang mawala pa. Palagi ko ngang sinasabi sa'yo na hindi kita iiwan, ikaw lang ang mamahalin ko, at never akong mapapagod na mahalin ka.
+
+I wish na marami pa tayong magawang memories together and more months and years to come sa ating dalawa. Sabay nating tutuparin ang mga pangarap natin nang magkasama, at palagi rin kitang susuportahan sa lahat ng gusto mo. Always lang ako nandito sa tabi mo.
+
+Good luck sa acads, babi! Huwag mong masyadong i-pressure ang sarili mo. Go with the flow ka lang, kasi I know na magiging busy ka ngayong year. Kaya mo 'yan! Konting tiis na lang, makakapagtapos ka na rin. Fighting! ❤️
+
+Again, happy 8th monthsary sa pinakamamahal kong babae sa buong mundo! Ikaw lang ang mamahalin ko. I love you so much, always, and forever! ❤️
+`,
+
+  footerNote: "Mahal na mahal kita!",
+
+  photos: [
+    
+  ],
+
+};
+
+document.getElementById('text-opening-heading').textContent = CONFIG.openingHeading;
+document.getElementById('text-opening-question').textContent = CONFIG.openingQuestion;
+document.getElementById('btnYes').textContent = CONFIG.yesButtonLabel;
+document.getElementById('btnNo').textContent = CONFIG.noButtonLabel;
+document.getElementById('text-tulip-heading').textContent = CONFIG.tulipHeading;
+document.getElementById('text-tulip-subtitle').textContent = CONFIG.tulipSubtitle;
+document.getElementById('btnProceed').textContent = CONFIG.proceedButtonLabel;
+document.getElementById('text-letter-heading').textContent = CONFIG.letterHeading;
+
+const metaBits = [];
+if (CONFIG.monthsaryNumber) metaBits.push(CONFIG.monthsaryNumber + (CONFIG.monthsaryNumber == 1 ? "st" : "th") + " monthsary");
+if (CONFIG.monthsaryDate) metaBits.push(CONFIG.monthsaryDate);
+document.getElementById('text-letter-meta').textContent = metaBits.join(" · ");
+
+const letterBodyEl = document.getElementById('text-letter-body');
+if (CONFIG.letterText && CONFIG.letterText.trim().length > 0){
+  letterBodyEl.textContent = CONFIG.letterText;
+  letterBodyEl.classList.remove('placeholder');
+} else {
+  letterBodyEl.textContent = "This is where your letter will appear. Open this file, find the line that says \"letterText: ``,\" near the top of the script, and write your own words between the backtick marks. Every line break you add will show up here exactly as you typed it.";
+  letterBodyEl.classList.add('placeholder');
+}
+
+const footerEl = document.getElementById('text-footer-note');
+if (CONFIG.footerNote && CONFIG.footerNote.trim().length){
+  footerEl.textContent = CONFIG.footerNote;
+} else if (CONFIG.yourName && CONFIG.yourName.trim().length){
+  footerEl.textContent = "— " + CONFIG.yourName;
+} else {
+  footerEl.textContent = "";
+}
+
+const photoGrid = document.getElementById('photoGrid');
+CONFIG.photos.forEach(p => {
+  const wrap = document.createElement('div');
+  wrap.className = 'photo-item';
+  const slot = document.createElement('div');
+  slot.className = 'photo-slot';
+  if (p.src && p.src.trim().length){
+    const img = document.createElement('img');
+    img.src = p.src;
+    img.alt = p.caption || "photo of us";
+    slot.appendChild(img);
+  } else {
+    slot.textContent = "add your photo here";
+  }
+  wrap.appendChild(slot);
+  if (p.caption){
+    const cap = document.createElement('p');
+    cap.className = 'photo-caption';
+    cap.textContent = p.caption;
+    wrap.appendChild(cap);
+  }
+  photoGrid.appendChild(wrap);
+});
+
+function goToScreen(id){
+  const current = document.querySelector('.screen.active');
+  const next = document.getElementById(id);
+  if (!current || !next || current === next) return;
+  current.classList.add('leaving');
+  setTimeout(() => {
+    current.classList.remove('active','leaving');
+    next.classList.add('active');
+  }, 420);
+}
+
+document.getElementById('btnYes').addEventListener('click', () => goToScreen('screen-2'));
+document.getElementById('btnProceed').addEventListener('click', () => goToScreen('screen-3'));
+
+const noBtn = document.getElementById('btnNo');
+const btnRow = document.getElementById('btnRow1');
+const card1 = document.getElementById('card1');
+let noDodgeCount = 0;
+
+function dodgeNoButton(){
+  noDodgeCount++;
+  const cardRect = card1.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
+  const maxX = cardRect.width - btnRect.width - 24;
+  const maxY = cardRect.height - btnRect.height - 24;
+  const randX = Math.max(24, Math.random() * maxX);
+  const randY = Math.max(24, Math.random() * maxY);
+  noBtn.style.position = 'absolute';
+  noBtn.style.left = randX + 'px';
+  noBtn.style.top = randY + 'px';
+  const scale = Math.max(0.72, 1 - noDodgeCount * 0.03);
+  noBtn.style.transform = `scale(${scale})`;
+}
+noBtn.addEventListener('mouseenter', dodgeNoButton);
+noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodgeNoButton(); }, { passive:false });
+noBtn.addEventListener('click', (e) => { e.preventDefault(); dodgeNoButton(); });
+card1.style.position = 'relative';
+card1.style.minHeight = '340px';
+
+const tulipColors = ['#E8829F', '#F3A9C4', '#C94F63', '#F7C9DA'];
+const tulipRow = document.getElementById('tulipRow');
+for (let i = 0; i < 7; i++){
+  const c = tulipColors[i % tulipColors.length];
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox','0 0 60 90');
+  svg.innerHTML = `
+    <path d="M30 88 L30 40" stroke="#8FB88A" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M30 60 Q16 58 14 48" stroke="#8FB88A" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M30 66 Q44 64 46 54" stroke="#8FB88A" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M30 42 C12 42 10 20 20 8 C25 15 28 18 30 22 C32 18 35 15 40 8 C50 20 48 42 30 42 Z" fill="${c}"/>
+    <path d="M30 42 C23 34 23 18 30 8 C37 18 37 34 30 42 Z" fill="#FCE0EC" opacity="0.55"/>
+  `;
+  tulipRow.appendChild(svg);
+}
+
+const petalField = document.getElementById('petalField');
+for (let i = 0; i < 14; i++){
+  const petal = document.createElement('span');
+  petal.className = 'petal';
+  petal.textContent = i % 3 === 0 ? '✿' : (i % 3 === 1 ? '❀' : '·');
+  petal.style.left = Math.random() * 100 + '%';
+  petal.style.setProperty('--drift', (Math.random() * 60 - 30) + 'px');
+  petal.style.animationDuration = (6 + Math.random() * 5) + 's';
+  petal.style.animationDelay = (Math.random() * 6) + 's';
+  petal.style.fontSize = (10 + Math.random() * 10) + 'px';
+  petalField.appendChild(petal);
+}
+
+const envelope = document.getElementById('envelope');
+const flap = document.getElementById('flap');
+const letterPaper = document.getElementById('letterPaper');
+const envelopeHint = document.getElementById('envelope-hint');
+let opened = false;
+
+function openLetter(){
+  if (opened) return;
+  opened = true;
+  flap.style.transform = 'rotateX(180deg) translateY(-6px)';
+  envelope.style.transform = 'translateY(-6px) scale(1.03)';
+  envelopeHint.style.display = 'none';
+  setTimeout(() => { letterPaper.classList.add('shown'); }, 260);
+}
+envelope.addEventListener('click', openLetter);
+envelope.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLetter(); } });
+</script>
+</body>
+</html>
